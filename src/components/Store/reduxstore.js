@@ -1,9 +1,28 @@
 
 import  {configureStore, createSlice} from '@reduxjs/toolkit';
+import listtdataslice from './Slices.js/Itemsdata';
 
 const carttoggle = {
     carttoggle : true
 }
+
+const cartTotal= {
+    carttotal : 0
+}
+
+const carttotalreducer = createSlice({
+    name : 'cartTotal',
+    initialState : cartTotal,
+    reducers : {
+        addtocart(state){
+            state.carttotal++;
+        },
+        deletetocart(state)
+        {
+            state.carttotal--;
+        }
+    }
+});
 
 const togglereducer = createSlice({
     name : 'togglecart',
@@ -16,9 +35,10 @@ const togglereducer = createSlice({
 });
 
 let store = configureStore({
-    reducer : togglereducer.reducer
+    reducer :{toggle : togglereducer.reducer, list : listtdataslice.reducer, cartvalue : carttotalreducer.reducer}
 })
 
 export const toggleActions = togglereducer.actions;
+export const carttotalActions = carttotalreducer.actions;
 
 export default store;
