@@ -11,13 +11,15 @@ const listtdataslice = createSlice({
     reducers : {
        add(state,action)
        {
-        let index = state.findIndex((item)=> item.title == action.payload.title);
-              state[index].count++;
+        // let index = state.findIndex((item)=> item.title == action.payload.title);
+        //       state[index].count++;
+        return action.payload;
        },
        remove(state,action){
-        let index = state.findIndex((item)=>item.title == action.payload.title);
+        // let index = state.findIndex((item)=>item.title == action.payload.title);
         
-              state[index].count--;
+            //   state[index].count--;
+            return action.payload;
        },
        listitem(state,action){
               console.log("inside upated");

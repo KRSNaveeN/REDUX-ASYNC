@@ -40,9 +40,9 @@ const Cart = (props) => {
       <h2>Your Shopping Cart</h2>
       <ul>
         {listitems.map((item)=>{
-          let total = (item.count)*(item.price);
+          // let total = (item.count)*(item.price);
           if((item.count >0)){
-          return <CartItem key={Math.random()} item={{total:total, title: item.title, price :item.price, quantity : item.count}}/>
+          return <CartItem key={Math.random()} item={{ title: item.title, price :item.price, count : item.count, description : item.description}}/>
           }
         })}
       </ul>

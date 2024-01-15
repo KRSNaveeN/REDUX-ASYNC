@@ -14,18 +14,23 @@ const ProductItem = (props) => {
 
   const data = useSelector((state)=>state.list);
 
-  useEffect(()=>{
-         datafetcher();
-  },[data]);
+  // useEffect(()=>{
+  //        datafetcher();
+  // },[data]);
 
 const datafetcher = async ()=>{
   dispatch(navActions.sending(true))
   dispatch(navActions.output({msg1 : 'sending', msg2: "adding to cart"}));
   console.log("posting to firebase");
+
+  let index =  data.findIndex((items)=>title === items.title);
+  let newlist = [...data];
+  newlist[index] = {...newlist[index], count : newlist[index].count+1 };
   try{
   let response = await fetch("https://reduxtoolkit-asynchandler-default-rtdb.firebaseio.com/data.json",{
     method : 'PUT',
-    body : JSON.stringify(data)
+    // body : JSON.stringify(data)
+    body : JSON.stringify(newlist)
   });
   // dispatch(navActions.sending(false));
   let ans = await response.json();
@@ -35,7 +40,9 @@ const datafetcher = async ()=>{
   if(response.ok)
   {
     console.log("response sucess")
-    dispatch(navActions.output({msg1 : 'sucess', msg2 :'sending successful'}))
+    dispatch(navActions.output({msg1 : 'sucess', msg2 :'sending successful'}));
+    dispatch(listdataActions.add(newlist));
+    dispatch(carttotalActions.addtocart());
     
   }
   else{
@@ -44,7 +51,7 @@ const datafetcher = async ()=>{
   }
 }
 catch(err){
-  dispatch(navActions.output({msg1 : "failed", msg2 : "data sending failed"}))
+  dispatch(navActions.output({msg1 : "failed", msg2 : "data sending failed"}));
   // alert(err);
   console.log(err)
 
@@ -53,12 +60,12 @@ catch(err){
 
 }
 
-  const additemHandler =  ()=>{
-    dispatch(listdataActions.add(props.x));
-    dispatch(carttotalActions.addtocart());
+  // const additemHandler =  ()=>{
+  //   dispatch(listdataActions.add(props.x));
+  //   dispatch(carttotalActions.addtocart());
    
    
-  }
+  // }
 
   return (
     <li className={classes.item}>
@@ -69,7 +76,8 @@ catch(err){
         </header>
         <p>{description}</p>
         <div className={classes.actions}>
-          <button onClick={additemHandler}>Add to Cart</button>
+          {/* <button onClick={additemHandler}>Add to Cart</button> */}
+          <button onClick={datafetcher}>Add to Cart</button>
         </div>
       </Card>
     </li>
