@@ -1,20 +1,44 @@
+import { useEffect } from 'react';
 import Card from '../UI/Card';
 import classes from './Cart.module.css';
 import CartItem from './CartItem';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { listdataActions } from '../Store/Slices.js/Itemsdata';
+import { carttotalActions } from '../Store/reduxstore';
 
 const Cart = (props) => {
+    let dispatch = useDispatch();
+    const listitems = useSelector((state)=>state.list);
 
-  const listitems = useSelector((state)=>state.list);
+    const fetchingData = async () =>{
+      try{
+    let response  = await fetch("https://reduxtoolkit-asynchandler-default-rtdb.firebaseio.com/data.json");
+    if(response.ok){
+      let ans = await response.json();
+      let x = Object.values(ans);
+      console.log("reload", Object.values(ans));
+      let county =0;
+      x.forEach((item)=> county = (county+item.count));
+      dispatch(listdataActions.listitem(x));
+      dispatch(carttotalActions.carttottal(county));
+    }
+  }
+  catch(err){
+
+    console.log(err);
+  }
+  }
+
+  useEffect(()=>{
+      fetchingData();
+  },[]);
+
+  console.log("inside cart0")
   console.log(listitems);
   return (
     <Card className={classes.cart}>
       <h2>Your Shopping Cart</h2>
       <ul>
-        {/* <CartItem
-          item={{ title: 'Test Item', quantity: 3, total: 18, price: 6 }} 
-         /> */}
-        {/* <CartItem/> */}
         {listitems.map((item)=>{
           let total = (item.count)*(item.price);
           if((item.count >0)){
